@@ -1,0 +1,28 @@
+name: CI-CD-PIPELINE to AWS-ElasticBeanstalk
+env: # global environment variuabels
+  EB_PACKAGE_S3_BUCKET_NAME : "TurianKer-flask-application-packages" # где хранятся пэкеджи
+  EB_APPLICATION_NAME       : "MyFlask" # апликейшен эластика который сделан 
+  EB_ENVVIRONMENT_NAME      : "MyFlask-env" # прод, стейдж и т.д.
+  DEPLOY_PACKAGE_NAME       : "flask-app-${{ github.sha }}.zip" # файл который используется
+  AWS_REGION_NAME           : "us-west-2" # регион авс
+  
+
+on:
+  push:
+    branches: 
+      - main # мастера не существует онли мейн брэнч
+
+jobs:
+  my_ci_part:
+    runs-on : ubuntu-latest
+
+    steps:
+    - name: Git clone our repo
+      uses: actions/checkout@v1 # checkout all repository and clone it
+
+    - name: Create ZIP deployment package # запаковать фласк апликейшен
+      run : zip -r ${{ env.DEPLOY_PACKAGE_NAME }} ./ -x *.git* # все кроме папок гит
+
+    
+
+      
